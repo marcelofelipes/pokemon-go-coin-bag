@@ -13,9 +13,20 @@ import {
   validateSend,
 } from "./protocol.js";
 
-const CLIENT_VERSION = "1.5.0-sequential";
+import {
+  initParticleCanvas,
+  setScanningMode,
+  burstJoyConParticles,
+  burstGoldenCoins,
+  animateStepTransition,
+  playPokeballCaptureLock,
+  initInteractiveTilt,
+} from "./animations.js";
+
+const CLIENT_VERSION = "2.0.0-vite";
 const GATT_SETTLE_MS = 75;
 
+const fxCanvas = document.querySelector("#fx-canvas");
 const wizard = document.querySelector("#wizard");
 const button = document.querySelector("#thing");
 const stateText = document.querySelector("#thing-state");
@@ -23,6 +34,8 @@ const detailText = document.querySelector("#thing-detail");
 const langButtons = document.querySelectorAll("[data-set-lang]");
 const gotoStepBtns = document.querySelectorAll("[data-goto-step]");
 const btnBleBack = document.querySelector("#btn-ble-back");
+const btnUnpair = document.querySelector("#btn-unpair");
+const coinTrophy = document.querySelector("#coin-trophy");
 
 // BLE Step Header & Scanner elements
 const bleStepEyebrow = document.querySelector("#ble-step-eyebrow");
@@ -77,6 +90,7 @@ const I18N = {
     rewardExchangeTitle: "Sacola de Moedas Liberada!",
     rewardExchangeDesc: (name) =>
       `Cartão-postal de ${name} recebido! Abra sua Bolsa no Pokémon GO para usar a Coin Bag e capturar o Gimmighoul.`,
+    unpairDone: "Switch Despareado! Voltando ao início…",
   },
   en: {
     step2Eyebrow: "STEP 2 OF 4 · 1ST BLUETOOTH CONNECTION",
@@ -107,6 +121,7 @@ const I18N = {
     rewardExchangeTitle: "Coin Bag Unlocked!",
     rewardExchangeDesc: (name) =>
       `Postcard from ${name} received! Check your Items in Pokémon GO to open your Coin Bag and catch Gimmighoul.`,
+    unpairDone: "Switch Unpaired! Returning to start…",
   },
 };
 
@@ -123,7 +138,16 @@ function dict() {
   return I18N[currentLang] ?? I18N.pt;
 }
 
+function getActiveSlideEl(step) {
+  if (step === 2 || step === 4) {
+    return document.querySelector('.step-view[data-view="ble"]');
+  }
+  return document.querySelector(`.step-view[data-view="${step}"]`);
+}
+
 function setStep(step) {
+  const prevStep = currentStep;
+  const direction = step >= prevStep ? 1 : -1;
   currentStep = step;
   wizard.dataset.step = String(step);
 
@@ -145,6 +169,13 @@ function setStep(step) {
   }
 
   renderState();
+
+  const activeSlide = getActiveSlideEl(step);
+  animateStepTransition(activeSlide, direction);
+
+  if (step === 5) {
+    setTimeout(() => burstGoldenCoins(coinTrophy || wizard), 120);
+  }
 }
 
 function applyLanguage(lang) {
@@ -160,7 +191,6 @@ function applyLanguage(lang) {
 }
 
 function updateSubSteps() {
-  // Highlight sequential BLE sub-steps (1. Detect GO -> 2. Read Trainer -> 3. Sign Switch)
   let activeSub = 1;
   let allDone = false;
 
@@ -186,6 +216,8 @@ function updateScannerCard() {
   const savedAppId = localStorage.getItem("applicationId");
   if (savedAppId) {
     virtualSwitchIdEl.textContent = `Switch ID: ${savedAppId.slice(0, 8).toUpperCase()}`;
+  } else {
+    virtualSwitchIdEl.textContent = "Switch-Titan";
   }
 
   if (currentStep === 2) {
@@ -229,6 +261,8 @@ function updateScannerCard() {
 
 function renderState() {
   const d = dict();
+  const isBusy = BUSY_STATES.has(currentState);
+  setScanningMode(isBusy);
 
   if (currentState === "ready") {
     stateText.textContent = currentStep === 4 ? d.readyStep4 : d.readyStep2;
@@ -245,7 +279,7 @@ function renderState() {
   }
 
   button.dataset.state = currentState;
-  button.disabled = currentState === "unsupported" || BUSY_STATES.has(currentState);
+  button.disabled = currentState === "unsupported" || isBusy;
 
   rewardTitle.textContent = d.rewardExchangeTitle;
   rewardDesc.textContent = d.rewardExchangeDesc(lastPlayerName || "Pokémon GO");
@@ -275,6 +309,79 @@ btnBleBack.addEventListener("click", () => {
   if (busy) return;
   setStep(currentStep === 4 ? 3 : 1);
 });
+
+if (coinTrophy) {
+  coinTrophy.addEventListener("click", () => burstGoldenCoins(coinTrophy));
+}
+
+async function unpairSwitch() {
+  if (busy) return;
+  busy = true;
+
+  try {
+    if (activeDevice?.gatt?.connected) {
+      activeDevice.gatt.disconnect();
+    }
+    if (rememberedDevice?.gatt?.connected) {
+      rememberedDevice.gatt.disconnect();
+    }
+    if (typeof rememberedDevice?.forget === "function") {
+      try {
+        await rememberedDevice.forget();
+      } catch {
+        // Ignore if forget() is unsupported or fails
+      }
+    }
+    if (typeof navigator.bluetooth?.getDevices === "function") {
+      try {
+        const permitted = await navigator.bluetooth.getDevices();
+        for (const dev of permitted) {
+          if (dev.gatt?.connected) dev.gatt.disconnect();
+          if (typeof dev.forget === "function") {
+            try {
+              await dev.forget();
+            } catch {
+              // Ignore
+            }
+          }
+        }
+      } catch {
+        // Ignore
+      }
+    }
+
+    localStorage.removeItem("applicationId");
+    rememberedDevice = null;
+    activeDevice = null;
+    lastPlayerName = "";
+    lastMode = null;
+
+    if (btnUnpair) {
+      const labelEl = btnUnpair.querySelector("#unpair-btn-label");
+      const originalHtml = labelEl ? labelEl.innerHTML : "";
+      btnUnpair.classList.add("unpaired-done");
+      btnUnpair.disabled = true;
+      if (labelEl) {
+        labelEl.textContent = dict().unpairDone;
+      }
+      burstJoyConParticles(btnUnpair);
+      await sleep(900);
+      if (labelEl) {
+        labelEl.innerHTML = originalHtml;
+      }
+      btnUnpair.classList.remove("unpaired-done");
+      btnUnpair.disabled = false;
+    }
+
+    setStep(1);
+  } finally {
+    busy = false;
+  }
+}
+
+if (btnUnpair) {
+  btnUnpair.addEventListener("click", unpairSwitch);
+}
 
 function sleep(milliseconds) {
   return new Promise((resolve) => setTimeout(resolve, milliseconds));
@@ -593,15 +700,17 @@ async function doTheThing() {
         applicationIdGattValue(applicationId)
       );
       setState("success-pair");
-      // Automatically advance from Step 2 (Pair) -> Step 3 (Prepare Postcard)!
-      await sleep(900);
+      playPokeballCaptureLock(button);
+      burstJoyConParticles(button);
+      await sleep(950);
       setStep(3);
     } else if (mode[0] === 0x01) {
       setState("exchanging");
       await performExchange(chars, applicationId, nonce, 15_000);
       setState("success-exchange");
-      // Automatically advance from Step 4 (Receive Postcard) -> Step 5 (Coin Bag Reward)!
-      await sleep(800);
+      playPokeballCaptureLock(button);
+      burstGoldenCoins(button);
+      await sleep(850);
       setStep(5);
     } else {
       throw new Error("Unsupported mode");
@@ -634,5 +743,8 @@ if (!navigator.bluetooth) {
 } else {
   currentState = "ready";
 }
+
+initParticleCanvas(fxCanvas);
+initInteractiveTilt(wizard);
 applyLanguage(currentLang);
 setStep(1);

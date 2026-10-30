@@ -1,16 +1,18 @@
 :root {
   color-scheme: dark;
   --bg-deep: #070a12;
-  --card-bg: rgba(17, 23, 39, 0.86);
-  --card-inner: rgba(255, 255, 255, 0.04);
-  --border-soft: rgba(255, 255, 255, 0.09);
+  --card-bg: rgba(17, 23, 39, 0.84);
+  --card-inner: rgba(255, 255, 255, 0.045);
+  --border-soft: rgba(255, 255, 255, 0.1);
   --joycon-cyan: #00c3e3;
   --joycon-red: #ff4554;
   --poke-gold: #ffcb3b;
   --poke-green: #2ee59d;
   --text-primary: #f8faff;
-  --text-secondary: rgba(214, 224, 248, 0.76);
-  --text-muted: rgba(168, 182, 216, 0.52);
+  --text-secondary: rgba(214, 224, 248, 0.78);
+  --text-muted: rgba(168, 182, 216, 0.54);
+  --glare-x: 50%;
+  --glare-y: 0%;
   font-family: "Plus Jakarta Sans", Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   background: var(--bg-deep);
   color: var(--text-primary);
@@ -37,6 +39,16 @@ body {
   background: var(--bg-deep);
   overflow-x: hidden;
   position: relative;
+}
+
+/* Fullscreen Interactive Particle & Coin Canvas */
+.fx-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 2;
 }
 
 /* Ambient Lights */
@@ -83,7 +95,7 @@ body {
 
 .app-shell {
   position: relative;
-  z-index: 1;
+  z-index: 3;
   width: min(35rem, 100%);
   display: flex;
   flex-direction: column;
@@ -181,8 +193,10 @@ body {
   line-height: 1.4;
 }
 
-/* Main Wizard Card */
+/* Main Wizard Card with 3D Holo Glare */
 .wizard-card {
+  position: relative;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
@@ -192,8 +206,27 @@ body {
   border: 1px solid var(--border-soft);
   backdrop-filter: blur(22px);
   box-shadow:
-    0 1.75rem 4.5rem rgba(0, 0, 0, 0.5),
-    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    0 1.75rem 4.5rem rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.holo-glare {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at var(--glare-x) var(--glare-y),
+    rgba(255, 255, 255, 0.08) 0%,
+    transparent 55%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.wizard-card > *:not(.holo-glare) {
+  position: relative;
+  z-index: 1;
 }
 
 /* Sequential 5-Step Progress Track */
@@ -219,7 +252,7 @@ body {
   color: var(--text-muted);
   font: inherit;
   cursor: pointer;
-  transition: all 200ms ease;
+  transition: all 220ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .node-circle {
@@ -232,7 +265,7 @@ body {
   font-weight: 800;
   background: rgba(255, 255, 255, 0.06);
   border: 1.5px solid rgba(255, 255, 255, 0.14);
-  transition: all 220ms ease;
+  transition: all 260ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .node-label {
@@ -249,16 +282,17 @@ body {
   background: var(--joycon-cyan);
   border-color: var(--joycon-cyan);
   color: #041218;
-  transform: scale(1.08);
-  box-shadow: 0 0 0.9rem rgba(0, 195, 227, 0.5);
+  transform: scale(1.14);
+  box-shadow: 0 0 1rem rgba(0, 195, 227, 0.55);
 }
 
 .wizard-card[data-step="3"] .step-node.active .node-circle,
-.wizard-card[data-step="4"] .step-node.active .node-circle {
+.wizard-card[data-step="4"] .step-node.active .node-circle,
+.wizard-card[data-step="5"] .step-node.active .node-circle {
   background: var(--poke-gold);
   border-color: var(--poke-gold);
   color: #1a1204;
-  box-shadow: 0 0 0.9rem rgba(255, 203, 59, 0.5);
+  box-shadow: 0 0 1rem rgba(255, 203, 59, 0.55);
 }
 
 .step-node.completed {
@@ -284,7 +318,7 @@ body {
   height: 100%;
   width: 0%;
   background: linear-gradient(90deg, var(--joycon-cyan), var(--poke-green));
-  transition: width 320ms ease;
+  transition: width 360ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .track-fill.filled {
@@ -296,7 +330,6 @@ body {
   display: none;
   flex-direction: column;
   gap: 1rem;
-  animation: fade-slide 240ms ease;
 }
 
 .wizard-card[data-step="1"] .step-view[data-view="1"],
@@ -310,7 +343,7 @@ body {
   display: flex;
 }
 
-/* Banners */
+/* Banners & Animated SVG Icons */
 .visual-banner {
   display: flex;
   align-items: center;
@@ -321,17 +354,17 @@ body {
 }
 
 .banner-blue {
-  background: linear-gradient(135deg, rgba(0, 195, 227, 0.15), rgba(0, 195, 227, 0.03));
-  border-color: rgba(0, 195, 227, 0.3);
+  background: linear-gradient(135deg, rgba(0, 195, 227, 0.16), rgba(0, 195, 227, 0.03));
+  border-color: rgba(0, 195, 227, 0.32);
 }
 .banner-gold {
-  background: linear-gradient(135deg, rgba(255, 203, 59, 0.16), rgba(255, 203, 59, 0.03));
-  border-color: rgba(255, 203, 59, 0.32);
+  background: linear-gradient(135deg, rgba(255, 203, 59, 0.17), rgba(255, 203, 59, 0.03));
+  border-color: rgba(255, 203, 59, 0.34);
 }
 
 .banner-icon {
-  width: 3rem;
-  height: 3rem;
+  width: 3.1rem;
+  height: 3.1rem;
   border-radius: 0.95rem;
   display: grid;
   place-items: center;
@@ -345,8 +378,23 @@ body {
   color: var(--poke-gold);
 }
 .banner-icon svg {
-  width: 1.65rem;
-  height: 1.65rem;
+  width: 1.7rem;
+  height: 1.7rem;
+  overflow: visible;
+}
+
+/* Joy-Con Snap Animation */
+.joycon-left {
+  animation: joycon-snap-left 2.4s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+}
+.joycon-right {
+  color: var(--joycon-red);
+  animation: joycon-snap-right 2.4s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+}
+
+/* Postcard Hover Float Animation */
+.postcard-anim svg {
+  animation: float-bob 2.6s ease-in-out infinite;
 }
 
 .eyebrow {
@@ -388,6 +436,12 @@ body {
   border-radius: 1.1rem;
   background: var(--card-inner);
   border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: transform 180ms ease, border-color 180ms ease;
+}
+
+.clean-steps li:hover {
+  transform: translateX(4px);
+  border-color: rgba(255, 255, 255, 0.15);
 }
 
 .li-icon {
@@ -440,7 +494,7 @@ body {
   font-weight: 800;
   cursor: pointer;
   box-shadow: 0 0.6rem 1.8rem rgba(0, 195, 227, 0.28);
-  transition: transform 160ms ease, filter 160ms ease;
+  transition: transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1), filter 160ms ease;
 }
 
 .primary-next-btn.btn-gold {
@@ -450,13 +504,22 @@ body {
 }
 
 .primary-next-btn:hover {
-  transform: translateY(-2px);
+  transform: translateY(-2px) scale(1.01);
   filter: brightness(1.07);
+}
+
+.primary-next-btn:active {
+  transform: translateY(0) scale(0.985);
 }
 
 .primary-next-btn svg {
   width: 1.15rem;
   height: 1.15rem;
+  transition: transform 180ms ease;
+}
+
+.primary-next-btn:hover svg {
+  transform: translateX(4px);
 }
 
 .skip-link-btn {
@@ -537,7 +600,7 @@ body {
   font-size: 0.7rem;
   font-weight: 700;
   color: var(--text-muted);
-  transition: all 200ms ease;
+  transition: all 220ms ease;
 }
 
 .sub-dot {
@@ -549,8 +612,9 @@ body {
 
 .substep.active {
   color: var(--poke-gold);
-  border-color: rgba(255, 203, 59, 0.4);
-  background: rgba(255, 203, 59, 0.1);
+  border-color: rgba(255, 203, 59, 0.45);
+  background: rgba(255, 203, 59, 0.12);
+  transform: scale(1.02);
 }
 .substep.active .sub-dot {
   background: var(--poke-gold);
@@ -559,8 +623,8 @@ body {
 
 .substep.done {
   color: var(--poke-green);
-  border-color: rgba(46, 229, 157, 0.4);
-  background: rgba(46, 229, 157, 0.1);
+  border-color: rgba(46, 229, 157, 0.45);
+  background: rgba(46, 229, 157, 0.12);
 }
 .substep.done .sub-dot {
   background: var(--poke-green);
@@ -656,20 +720,20 @@ button#thing {
   font: inherit;
   text-align: center;
   -webkit-tap-highlight-color: transparent;
-  transition: transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 220ms ease, border-color 220ms ease;
+  transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 220ms ease, border-color 220ms ease;
 }
 
 button#thing:hover:not(:disabled) {
-  transform: translateY(-0.18rem) scale(1.006);
+  transform: translateY(-0.2rem) scale(1.01);
   box-shadow:
     0 1.5rem 3.5rem rgba(0, 0, 0, 0.5),
-    0 0 2.6rem rgba(0, 195, 227, 0.32),
+    0 0 2.8rem rgba(0, 195, 227, 0.35),
     inset 0 1px 2px rgba(255, 255, 255, 0.45);
-  border-color: rgba(0, 195, 227, 0.6);
+  border-color: rgba(0, 195, 227, 0.65);
 }
 
 button#thing:active:not(:disabled) {
-  transform: translateY(0.05rem) scale(0.992);
+  transform: translateY(0.05rem) scale(0.988);
 }
 
 button#thing:disabled {
@@ -698,11 +762,11 @@ button#thing:disabled {
     0 0.5rem 1.25rem rgba(0, 0, 0, 0.45);
   display: grid;
   place-items: center;
-  transition: all 220ms ease;
+  transition: all 240ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 button#thing:hover:not(:disabled) .core-ring {
-  transform: scale(1.08);
+  transform: scale(1.1);
   box-shadow:
     0 0 0 4px var(--joycon-cyan),
     0 0 1.4rem var(--joycon-cyan);
@@ -833,20 +897,22 @@ button[data-state="unsupported"] .icon-error {
 }
 
 .coin-trophy {
-  width: 4.5rem;
-  height: 4.5rem;
+  width: 4.8rem;
+  height: 4.8rem;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 203, 59, 0.28), rgba(255, 203, 59, 0.06));
+  background: radial-gradient(circle, rgba(255, 203, 59, 0.32), rgba(255, 203, 59, 0.06));
   border: 2px solid var(--poke-gold);
   color: var(--poke-gold);
   display: grid;
   place-items: center;
-  box-shadow: 0 0 2rem rgba(255, 203, 59, 0.35);
+  box-shadow: 0 0 2.2rem rgba(255, 203, 59, 0.42);
+  cursor: pointer;
+  animation: trophy-float 2.4s ease-in-out infinite;
 }
 
 .coin-trophy svg {
-  width: 2.4rem;
-  height: 2.4rem;
+  width: 2.5rem;
+  height: 2.5rem;
 }
 
 .reward-card h2 {
@@ -918,14 +984,45 @@ button[data-state="unsupported"] .icon-error {
   }
 }
 
-@keyframes fade-slide {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
+@keyframes joycon-snap-left {
+  0%, 100% {
     transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-2.5px);
+  }
+  55% {
+    transform: translateY(0.5px);
+  }
+}
+
+@keyframes joycon-snap-right {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(2.5px);
+  }
+  55% {
+    transform: translateY(-0.5px);
+  }
+}
+
+@keyframes float-bob {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-3px) rotate(-4deg);
+  }
+}
+
+@keyframes trophy-float {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-5px) scale(1.05);
   }
 }
 

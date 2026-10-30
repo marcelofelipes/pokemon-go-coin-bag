@@ -1,0 +1,16 @@
+{
+  "name": "pokemon-go-coin-bag-web",
+  "private": true,
+  "version": "2.0.0",
+  "type": "module",
+  "description": "Pokémon GO Coin Bag — Nintendo Switch Web Bluetooth Emulator (Vite)",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^6.2.0"
+  }
+}
+

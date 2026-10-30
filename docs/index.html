@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#080b14">
+  <meta name="theme-color" content="#070a12">
   <meta name="description" content="Passo a passo interativo para emular um Nintendo Switch via Bluetooth no Pokémon GO e ganhar a Coin Bag.">
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -11,6 +11,9 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- Interactive 60fps Particle & Golden Coin Canvas -->
+  <canvas id="fx-canvas" class="fx-canvas" aria-hidden="true"></canvas>
+
   <!-- Ambient Background & Pokéball Watermark -->
   <div class="ambient-light light-cyan" aria-hidden="true"></div>
   <div class="ambient-light light-red" aria-hidden="true"></div>
@@ -30,7 +33,7 @@
     <header class="app-header">
       <div class="brand-pill">
         <span class="joycon-dot dot-cyan"></span>
-        <span>POKÉ PORTAL</span>
+        <span>POKÉ PORTAL · VITE</span>
         <span class="joycon-dot dot-red"></span>
       </div>
 
@@ -44,13 +47,15 @@
     <section class="hero-title">
       <h1>Pokémon GO <span>Coin Bag</span></h1>
       <p>
-        <span class="i18n-pt">Siga os passos em sequência para parear o Switch virtual e receber sua Coin Bag.</span>
+        <span class="i18n-pt">Siga os passos em sequência para parear o Switch virtual e liberar sua Coin Bag.</span>
         <span class="i18n-en">Follow the steps in sequence to pair the virtual Switch and unlock your Coin Bag.</span>
       </p>
     </section>
 
-    <!-- Sequential 5-Step Wizard Card -->
+    <!-- Sequential 5-Step Wizard Card with Holographic Glare -->
     <section class="wizard-card" id="wizard" data-step="1">
+      <div class="holo-glare" aria-hidden="true"></div>
+
       <!-- Sequential 5-Step Progress Track -->
       <nav class="step-track" aria-label="Workflow Progress">
         <button type="button" class="step-node active" data-goto-step="1">
@@ -98,12 +103,16 @@
       <!-- ==================== PASSO 1: ABRIR PAREAMENTO NO JOGO ==================== -->
       <div class="step-view" data-view="1">
         <div class="visual-banner banner-blue">
-          <div class="banner-icon">
+          <div class="banner-icon joycon-anim">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="4" width="8" height="16" rx="4"/>
-              <rect x="13" y="4" width="8" height="16" rx="4"/>
-              <circle cx="7" cy="9" r="1.3" fill="currentColor"/>
-              <circle cx="17" cy="14" r="1.3" fill="currentColor"/>
+              <g class="joycon-left">
+                <rect x="3" y="4" width="8" height="16" rx="4"/>
+                <circle cx="7" cy="9" r="1.3" fill="currentColor"/>
+              </g>
+              <g class="joycon-right">
+                <rect x="13" y="4" width="8" height="16" rx="4"/>
+                <circle cx="17" cy="14" r="1.3" fill="currentColor"/>
+              </g>
             </svg>
           </div>
           <div class="banner-text">
@@ -162,7 +171,7 @@
       <!-- ==================== PASSO 3: PREPARAR CARTÃO-POSTAL NO JOGO ==================== -->
       <div class="step-view" data-view="3">
         <div class="visual-banner banner-gold">
-          <div class="banner-icon">
+          <div class="banner-icon postcard-anim">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
               <rect x="3" y="5" width="18" height="14" rx="2.5"/>
               <path d="m3 7 9 6 9-6"/>
@@ -313,7 +322,7 @@
       <!-- ==================== PASSO 5: RECOMPENSA FINAL (COIN BAG) ==================== -->
       <div class="step-view" data-view="5">
         <div class="reward-card">
-          <div class="coin-trophy" aria-hidden="true">
+          <div class="coin-trophy" id="coin-trophy" title="Click for coins!">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="9.5"/>
               <circle cx="12" cy="12" r="6" stroke-dasharray="2.5 2"/>
@@ -329,6 +338,20 @@
               <span class="i18n-pt">Enviar Outro Cartão-Postal</span>
               <span class="i18n-en">Send Another Postcard</span>
             </button>
+
+            <button type="button" class="unpair-btn" id="btn-unpair">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m2 2 20 20"/>
+                <path d="M14.5 9.5 17 7l-5-5v4.5"/>
+                <path d="M9.5 14.5 7 17l5 5v-4.5"/>
+                <path d="M7 7l10 10"/>
+              </svg>
+              <span id="unpair-btn-label">
+                <span class="i18n-pt">Desparear Switch &amp; Esquecer Dispositivo</span>
+                <span class="i18n-en">Unpair Switch &amp; Forget Device</span>
+              </span>
+            </button>
+
             <button type="button" class="skip-link-btn" data-goto-step="1">
               <span class="i18n-pt">Voltar ao início (Passo 1)</span>
               <span class="i18n-en">Back to start (Step 1)</span>
