@@ -1,15 +1,18 @@
 <!doctype html>
 <html lang="pt-BR" data-lang="pt">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#070a12">
-  <meta name="description" content="Passo a passo interativo para emular um Nintendo Switch via Bluetooth no Pokémon GO e ganhar a Coin Bag.">
+  <meta name="description"
+    content="Passo a passo interativo para emular um Nintendo Switch via Bluetooth no Pokémon GO e ganhar a Coin Bag.">
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <title>Pokémon GO · Switch Coin Bag</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
   <!-- Interactive 60fps Particle & Golden Coin Canvas -->
   <canvas id="fx-canvas" class="fx-canvas" aria-hidden="true"></canvas>
@@ -21,10 +24,10 @@
 
   <div class="pokeball-watermark" aria-hidden="true">
     <svg viewBox="0 0 200 200" fill="none">
-      <circle cx="100" cy="100" r="90" stroke="currentColor" stroke-width="8"/>
-      <path d="M10 100h62M128 100h62" stroke="currentColor" stroke-width="8"/>
-      <circle cx="100" cy="100" r="28" stroke="currentColor" stroke-width="8"/>
-      <circle cx="100" cy="100" r="12" fill="currentColor"/>
+      <circle cx="100" cy="100" r="90" stroke="currentColor" stroke-width="8" />
+      <path d="M10 100h62M128 100h62" stroke="currentColor" stroke-width="8" />
+      <circle cx="100" cy="100" r="28" stroke="currentColor" stroke-width="8" />
+      <circle cx="100" cy="100" r="12" fill="currentColor" />
     </svg>
   </div>
 
@@ -33,7 +36,7 @@
     <header class="app-header">
       <div class="brand-pill">
         <span class="joycon-dot dot-cyan"></span>
-        <span>POKÉ PORTAL · VITE</span>
+        <span>POKÉ PORTAL</span>
         <span class="joycon-dot dot-red"></span>
       </div>
 
@@ -104,14 +107,15 @@
       <div class="step-view" data-view="1">
         <div class="visual-banner banner-blue">
           <div class="banner-icon joycon-anim">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"
+              stroke-linejoin="round">
               <g class="joycon-left">
-                <rect x="3" y="4" width="8" height="16" rx="4"/>
-                <circle cx="7" cy="9" r="1.3" fill="currentColor"/>
+                <rect x="3" y="4" width="8" height="16" rx="4" />
+                <circle cx="7" cy="9" r="1.3" fill="currentColor" />
               </g>
               <g class="joycon-right">
-                <rect x="13" y="4" width="8" height="16" rx="4"/>
-                <circle cx="17" cy="14" r="1.3" fill="currentColor"/>
+                <rect x="13" y="4" width="8" height="16" rx="4" />
+                <circle cx="17" cy="14" r="1.3" fill="currentColor" />
               </g>
             </svg>
           </div>
@@ -134,8 +138,10 @@
               <strong class="i18n-pt">Abra as Configurações no jogo</strong>
               <strong class="i18n-en">Open Settings in-game</strong>
               <p>
-                <span class="i18n-pt">Toque na <strong>Poké Bola</strong> → <strong>Configurações</strong> → <strong>Dispositivos e serviços conectados</strong>.</span>
-                <span class="i18n-en">Tap the <strong>Poké Ball</strong> → <strong>Settings</strong> → <strong>Connected Devices and Services</strong>.</span>
+                <span class="i18n-pt">Toque na <strong>Poké Bola</strong> → <strong>Configurações</strong> →
+                  <strong>Dispositivos e serviços conectados</strong>.</span>
+                <span class="i18n-en">Tap the <strong>Poké Ball</strong> → <strong>Settings</strong> → <strong>Connected
+                    Devices and Services</strong>.</span>
               </p>
             </div>
           </li>
@@ -145,8 +151,10 @@
               <strong class="i18n-pt">Toque em Conectar ao Nintendo Switch</strong>
               <strong class="i18n-en">Tap Connect to Nintendo Switch</strong>
               <p>
-                <span class="i18n-pt">Selecione <strong>Nintendo Switch</strong> → <strong>Conectar ao Nintendo Switch</strong> e deixe o jogo procurando.</span>
-                <span class="i18n-en">Select <strong>Nintendo Switch</strong> → <strong>Connect to Nintendo Switch</strong> and leave it searching.</span>
+                <span class="i18n-pt">Selecione <strong>Nintendo Switch</strong> → <strong>Conectar ao Nintendo
+                    Switch</strong> e deixe o jogo procurando.</span>
+                <span class="i18n-en">Select <strong>Nintendo Switch</strong> → <strong>Connect to Nintendo
+                    Switch</strong> and leave it searching.</span>
               </p>
             </div>
           </li>
@@ -156,8 +164,9 @@
           <button type="button" class="primary-next-btn" data-goto-step="2">
             <span class="i18n-pt">Próximo: Parear Switch</span>
             <span class="i18n-en">Next: Pair Switch</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M5 12h14m-6-6 6 6-6 6"/>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M5 12h14m-6-6 6 6-6 6" />
             </svg>
           </button>
 
@@ -172,9 +181,10 @@
       <div class="step-view" data-view="3">
         <div class="visual-banner banner-gold">
           <div class="banner-icon postcard-anim">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="5" width="18" height="14" rx="2.5"/>
-              <path d="m3 7 9 6 9-6"/>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"
+              stroke-linejoin="round">
+              <rect x="3" y="5" width="18" height="14" rx="2.5" />
+              <path d="m3 7 9 6 9-6" />
             </svg>
           </div>
           <div class="banner-text">
@@ -196,8 +206,10 @@
               <strong class="i18n-pt">Abra o Álbum de Postais</strong>
               <strong class="i18n-en">Open your Postcard Book</strong>
               <p>
-                <span class="i18n-pt">No Pokémon GO, vá em <strong>Bolsa (Itens)</strong> → <strong>Álbum de Postais</strong> e escolha qualquer postal.</span>
-                <span class="i18n-en">In Pokémon GO, open <strong>Items</strong> → <strong>Postcard Book</strong> and pick any postcard.</span>
+                <span class="i18n-pt">No Pokémon GO, vá em <strong>Bolsa (Itens)</strong> → <strong>Álbum de
+                    Postais</strong> e escolha qualquer postal.</span>
+                <span class="i18n-en">In Pokémon GO, open <strong>Items</strong> → <strong>Postcard Book</strong> and
+                  pick any postcard.</span>
               </p>
             </div>
           </li>
@@ -207,8 +219,10 @@
               <strong class="i18n-pt">Toque em Enviar para o Nintendo Switch</strong>
               <strong class="i18n-en">Tap Send to Nintendo Switch</strong>
               <p>
-                <span class="i18n-pt">Toque no botão de menu (canto inferior direito) → <strong>Enviar para o Nintendo Switch</strong>.</span>
-                <span class="i18n-en">Tap the menu button (bottom right) → <strong>Send to Nintendo Switch</strong>.</span>
+                <span class="i18n-pt">Toque no botão de menu (canto inferior direito) → <strong>Enviar para o Nintendo
+                    Switch</strong>.</span>
+                <span class="i18n-en">Tap the menu button (bottom right) → <strong>Send to Nintendo
+                    Switch</strong>.</span>
               </p>
             </div>
           </li>
@@ -218,8 +232,9 @@
           <button type="button" class="primary-next-btn btn-gold" data-goto-step="4">
             <span class="i18n-pt">Próximo: Receber Postal &amp; Coin Bag</span>
             <span class="i18n-en">Next: Receive Postcard &amp; Coin Bag</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M5 12h14m-6-6 6 6-6 6"/>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M5 12h14m-6-6 6 6-6 6" />
             </svg>
           </button>
 
@@ -269,9 +284,9 @@
           <div class="device-slot" id="device-slot">
             <div class="slot-avatar">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="9"/>
-                <path d="M3 12h6m6 0h6"/>
-                <circle cx="12" cy="12" r="3"/>
+                <circle cx="12" cy="12" r="9" />
+                <path d="M3 12h6m6 0h6" />
+                <circle cx="12" cy="12" r="3" />
               </svg>
             </div>
             <div class="slot-info">
@@ -288,22 +303,26 @@
             <span class="radar-wave"></span>
             <span class="radar-wave radar-wave-2"></span>
             <div class="core-ring">
-              <svg class="icon-ready" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="9"/>
-                <path d="M3 12h6m6 0h6"/>
-                <circle cx="12" cy="12" r="3"/>
+              <svg class="icon-ready" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="9" />
+                <path d="M3 12h6m6 0h6" />
+                <circle cx="12" cy="12" r="3" />
               </svg>
-              <svg class="icon-busy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
-                <circle cx="12" cy="12" r="9"/>
-                <path d="M3 12h6m6 0h6"/>
-                <circle cx="12" cy="12" r="3"/>
+              <svg class="icon-busy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                stroke-linecap="round">
+                <circle cx="12" cy="12" r="9" />
+                <path d="M3 12h6m6 0h6" />
+                <circle cx="12" cy="12" r="3" />
               </svg>
-              <svg class="icon-success" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M20 6 9 17l-5-5"/>
+              <svg class="icon-success" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 6 9 17l-5-5" />
               </svg>
-              <svg class="icon-error" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 8v4m0 4h.01"/>
-                <circle cx="12" cy="12" r="9"/>
+              <svg class="icon-error" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 8v4m0 4h.01" />
+                <circle cx="12" cy="12" r="9" />
               </svg>
             </div>
           </div>
@@ -323,10 +342,11 @@
       <div class="step-view" data-view="5">
         <div class="reward-card">
           <div class="coin-trophy" id="coin-trophy" title="Click for coins!">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="9.5"/>
-              <circle cx="12" cy="12" r="6" stroke-dasharray="2.5 2"/>
-              <path d="M12 8.5v7M9.8 10.2h3.2a1.4 1.4 0 0 1 0 2.8h-2a1.4 1.4 0 0 0 0 2.8h3.2"/>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+              stroke-linejoin="round">
+              <circle cx="12" cy="12" r="9.5" />
+              <circle cx="12" cy="12" r="6" stroke-dasharray="2.5 2" />
+              <path d="M12 8.5v7M9.8 10.2h3.2a1.4 1.4 0 0 1 0 2.8h-2a1.4 1.4 0 0 0 0 2.8h3.2" />
             </svg>
           </div>
 
@@ -340,11 +360,12 @@
             </button>
 
             <button type="button" class="unpair-btn" id="btn-unpair">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
-                <path d="m2 2 20 20"/>
-                <path d="M14.5 9.5 17 7l-5-5v4.5"/>
-                <path d="M9.5 14.5 7 17l5 5v-4.5"/>
-                <path d="M7 7l10 10"/>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="m2 2 20 20" />
+                <path d="M14.5 9.5 17 7l-5-5v4.5" />
+                <path d="M9.5 14.5 7 17l5 5v-4.5" />
+                <path d="M7 7l10 10" />
               </svg>
               <span id="unpair-btn-label">
                 <span class="i18n-pt">Desparear Switch &amp; Esquecer Dispositivo</span>
@@ -371,4 +392,5 @@
 
   <script type="module" src="app.js"></script>
 </body>
+
 </html>
