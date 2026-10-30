@@ -539,6 +539,48 @@ body {
   color: var(--text-primary);
 }
 
+.unpair-btn {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  padding: 0.85rem 1.2rem;
+  border-radius: 1.15rem;
+  border: 1px solid rgba(255, 69, 84, 0.42);
+  background: rgba(255, 69, 84, 0.12);
+  color: #ff8590;
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 180ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.unpair-btn svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  flex-shrink: 0;
+}
+
+.unpair-btn:hover:not(:disabled) {
+  background: rgba(255, 69, 84, 0.22);
+  border-color: var(--joycon-red);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 0.5rem 1.4rem rgba(255, 69, 84, 0.25);
+}
+
+.unpair-btn:active:not(:disabled) {
+  transform: translateY(0) scale(0.985);
+}
+
+.unpair-btn.unpaired-done {
+  border-color: var(--poke-green);
+  background: rgba(46, 229, 157, 0.18);
+  color: var(--poke-green);
+}
+
 /* ==================== IN-PAGE SCANNER & SUBSTEPS ==================== */
 .inpage-scanner {
   display: flex;
@@ -928,6 +970,11 @@ button[data-state="unsupported"] .icon-error {
   line-height: 1.45;
   color: var(--text-secondary);
   max-width: 26rem;
+}
+
+.reward-card .step-actions {
+  width: 100%;
+  margin-top: 0.35rem;
 }
 
 /* Footer */
